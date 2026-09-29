@@ -1,6 +1,8 @@
 const express = require('express');
 const userRouter = express.Router();
-const User = require('../models/user.model.js')
+const User = require('../models/user.model.js');
+const bcrypt = require('bcryptjs')
+
 
 // sign up route
 userRouter.post('/register', async (req, res) =>{
@@ -17,6 +19,10 @@ userRouter.post('/register', async (req, res) =>{
                 messaege: "User already exists"
             })
         }
+        // hash the password.
+        const salt = await bcrypt.genSalt(10);
+        const hashPwd = bcrypt.hashSync(req.body.password, salt);
+        req.body.password = hashPwd;
 
         const newUser = await User(req.body);
         await newUser.save();
