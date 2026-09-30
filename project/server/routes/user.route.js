@@ -41,4 +41,43 @@ userRouter.post('/register', async (req, res) =>{
     }
 })
 
+
+
+//Login API
+
+userRouter.post('/login', async (req, res) => {
+    try{
+        const user = await User.findOne({email: req.body.email});
+
+        if(!user){
+            res.send({
+                success: false,
+                message: "User not found. Please register to continue"
+            })
+        }
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if(!validPassword){
+            res.send({
+                success: false,
+                message: "Invalid password"
+            })
+        }
+        res.send({
+            success: true,
+            message: "Login successful"
+        })
+            
+    }
+        
+
+    
+    catch (error){
+
+        res.status(500).json({message: 'Error in Logging in!'})
+
+    }
+
+})
+
 module.exports = userRouter;
