@@ -1,17 +1,30 @@
 import React from "react";
-import {Form, Input, Button } from 'antd';
-import {Link} from "react-router-dom"
-import {register} from '../calls/authCalls.js'
+import { Form, Input, Button, message } from 'antd';
+import { Link } from "react-router-dom"
+import { register } from '../calls/authCalls.js'
 
 
 
 
 function Register() {
 
-    const onSubmit =async (values)=>{
-        const response = await register(values)
-        return response
+  const onSubmit = async (values) => {
+    try {
+      const userData = await register(values)
+      if (userData.success) {
+        message.success(userData.message)
+      } else {
+        message.error(userData.message)
+      }
+    } catch (error) {
+      console.log(error.message)
     }
+
+
+
+  }
+
+
   return (
     <>
       <header className="App-header">
@@ -61,7 +74,7 @@ function Register() {
                   placeholder="Enter the password"
                 ></Input>
               </Form.Item>
-    
+
 
               <Form.Item>
                 <Button
